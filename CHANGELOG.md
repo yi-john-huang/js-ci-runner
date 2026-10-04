@@ -11,3 +11,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Runtime image: distroless, non-root (UID 65532) Node.js 24 image for shipping apps.
 - Gitflow CI: lint, build, smoke tests, and vulnerability scans on every pull request; `:develop` images and a real job-container check on every push to `develop`.
 - Automated releases: a `develop` to `master` pull request commits the next version; the merge publishes signed multi-arch images with an SBOM and provenance, and creates the tag and GitHub Release.
+- Local image build and smoke-test commands use Podman; CI smoke tests retain Docker by default.

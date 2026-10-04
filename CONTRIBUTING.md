@@ -33,8 +33,12 @@ This repository uses Gitflow. `develop` holds the next release. `master` holds r
 
 ## Local checks
 
+Use Podman for local image checks. On macOS, start the existing Podman machine first if it is stopped (`podman machine start`).
+
 ```bash
 node --test 'scripts/*.test.mjs'
-docker build -t local/ci images/ci && bash tests/smoke-ci.sh local/ci
-docker build -t local/runtime images/runtime && bash tests/smoke-runtime.sh local/runtime
+podman build -t local/ci images/ci && CONTAINER_CLI=podman bash tests/smoke-ci.sh local/ci
+podman build -t local/runtime images/runtime && CONTAINER_CLI=podman bash tests/smoke-runtime.sh local/runtime
 ```
+
+The CI workflow keeps Docker as the default container CLI for the smoke scripts. Podman tests an isolated UID 1001 workspace inside its machine; Docker tests a host bind mount and calls `sudo chown` when run as a non-root user.

@@ -9,17 +9,17 @@
 
 ## Dependencies and tooling
 - No root npm dependencies or package manager lockfile. The example app has no external npm dependencies.
-- Tests use built-in `node:test`; image smoke scripts require Docker. CI uses hadolint for Dockerfiles, shellcheck for shell scripts, and Trivy for vulnerability scans.
-- Docker builds the images; GitHub Actions handles checks and GHCR publishing. Weekly Dependabot updates target Docker base digests and GitHub Actions on `develop`.
+- Tests use built-in `node:test`; image smoke scripts use Docker in CI and Podman locally through `CONTAINER_CLI=podman`. CI uses hadolint for Dockerfiles, shellcheck for shell scripts, and Trivy for vulnerability scans.
+- Podman builds the images locally; Docker Buildx builds and publishes them in GitHub Actions. Weekly Dependabot updates target Docker base digests and GitHub Actions on `develop`.
 
 ## Local commands (repository root unless noted)
 ```bash
 node --test 'scripts/*.test.mjs'
 (cd examples/hello-app && npm test)
-docker build -t local/ci images/ci && bash tests/smoke-ci.sh local/ci
-docker build -t local/runtime images/runtime && bash tests/smoke-runtime.sh local/runtime
+podman build -t local/ci images/ci && CONTAINER_CLI=podman bash tests/smoke-ci.sh local/ci
+podman build -t local/runtime images/runtime && CONTAINER_CLI=podman bash tests/smoke-runtime.sh local/runtime
 ```
-- The first two commands run on Node.js 24 locally. Image commands require a working Docker daemon; `tests/smoke-ci.sh` also uses `sudo` to prepare a UID 1001 workspace unless run as root.
+- The first two commands run on Node.js 24 locally. Image commands require a running Podman machine on macOS (`podman machine start` if stopped). Podman checks a temporary UID 1001 workspace inside the machine; CI's Docker check uses a host bind mount and `sudo chown` unless run as root.
 - CI runs `shellcheck tests/*.sh scripts/*.sh` and hadolint on each image Dockerfile. See `.github/workflows/ci.yml` for the exact jobs.
 
 ## Release and security contract
