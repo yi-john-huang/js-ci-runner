@@ -9,6 +9,11 @@ updates:
       interval: weekly
     commit-message:
       prefix: build
+    # A Node.js major upgrade changes the image contract for every user and must match the
+    # runtime image. Make it a deliberate feat! release; Dependabot only updates the digest.
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: docker
     directory: /images/runtime
     target-branch: develop
