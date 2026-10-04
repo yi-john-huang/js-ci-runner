@@ -1,0 +1,30 @@
+# Gitflow: dependency updates open pull requests against develop.
+# The "build" prefix makes each update a patch release under Conventional Commits.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /images/ci
+    target-branch: develop
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    # A Node.js major upgrade changes the image contract for every user and must match the
+    # runtime image. Make it a deliberate feat! release; Dependabot only updates the digest.
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: docker
+    directory: /images/runtime
+    target-branch: develop
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
