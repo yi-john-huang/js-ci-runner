@@ -55,7 +55,7 @@ jobs:
       - uses: docker/setup-buildx-action@v4
 
       - name: Build for testing
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/${{ matrix.image }}
           load: true
@@ -92,7 +92,7 @@ jobs:
 
       - name: Publish the develop image
         if: github.event_name == 'push'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/${{ matrix.image }}
           push: true

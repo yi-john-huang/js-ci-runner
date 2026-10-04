@@ -62,7 +62,7 @@ jobs:
       - name: Publish the CI image
         id: ci
         if: steps.state.outputs.release == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/ci
           platforms: linux/amd64,linux/arm64
@@ -78,7 +78,7 @@ jobs:
       - name: Publish the runtime image
         id: runtime
         if: steps.state.outputs.release == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/runtime
           platforms: linux/amd64,linux/arm64
