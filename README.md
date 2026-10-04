@@ -13,7 +13,7 @@ Hardened, non-root container images for JavaScript and TypeScript CI. Your repos
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: ghcr.io/yi-john-huang/js-ci-runner/ci:0.0.0
+    container: ghcr.io/yi-john-huang/js-ci-runner/ci:0.1.0
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
@@ -27,12 +27,12 @@ The image contains Node.js 24, npm, corepack (for pnpm and Yarn), bash, git, tar
 ## Ship an app on the runtime image
 
 ```dockerfile
-FROM ghcr.io/yi-john-huang/js-ci-runner/ci:0.0.0 AS build
+FROM ghcr.io/yi-john-huang/js-ci-runner/ci:0.1.0 AS build
 WORKDIR /home/runner/app
 COPY --chown=1001:1001 . .
 RUN npm ci && npm run build && npm prune --omit=dev
 
-FROM ghcr.io/yi-john-huang/js-ci-runner/runtime:0.0.0
+FROM ghcr.io/yi-john-huang/js-ci-runner/runtime:0.1.0
 WORKDIR /app
 COPY --from=build /home/runner/app/dist ./dist
 COPY --from=build /home/runner/app/node_modules ./node_modules
@@ -52,7 +52,7 @@ The runtime image starts `node` directly. `CMD` takes the script path. [examples
 To check a signature:
 
 ```bash
-cosign verify ghcr.io/yi-john-huang/js-ci-runner/ci:0.0.0 \
+cosign verify ghcr.io/yi-john-huang/js-ci-runner/ci:0.1.0 \
   --certificate-identity-regexp '^https://github.com/yi-john-huang/js-ci-runner/.github/workflows/release-publish.yml@' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
